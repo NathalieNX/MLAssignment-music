@@ -43,7 +43,7 @@ def get_key_value(dict, key):
 
 def preprocess(filename, all_data, i):
     
-    data, all_artist_names, all_artist_ids, all_artist_locations, all_titles, all_song_ids, all_years, all_song_hotttnessss, all_danceabilities, all_durations, all_modes, all_tempos, all_artist_mbtags = all_data
+    data, all_artist_names, all_artist_ids, all_artist_locations, all_titles, all_song_ids, all_years, all_durations, all_modes, all_tempos, all_artist_mbtags = all_data
     # TODO delete this
     #print("preprocess - filename type and value : ", type(filename), filename)
     #print("preprocess - i is : ", i)
@@ -95,17 +95,7 @@ def preprocess(filename, all_data, i):
     all_years.add(year)
     data[i,j] = year
     j+=1
-    
-    song_hotttnesss = GETTERS.get_song_hotttnesss(h5)
-    all_song_hotttnessss.add(song_hotttnesss)
-    data[i,j] = song_hotttnesss
-    j+=1
-    
-    danceability = GETTERS.get_danceability(h5)
-    all_danceabilities.add(danceability)
-    data[i,j] = danceability
-    j+=1
-    
+
     duration = GETTERS.get_duration(h5)
     all_durations.add(duration)
     data[i,j] = duration
@@ -155,8 +145,8 @@ def normalize(M):
     newM=np.zeros(np.shape(M))
     example=M[0]
     #print(np.shape(M))
-    for k, elem in enumerate(example):
-        col = M[:,k]
+    for i, elem in enumerate(example):
+        col = M[:,i]
         #nonNans=[x if not(np.isnan(x)) for x in col]
         nonNans=[]
         onlyNans=True
@@ -170,9 +160,9 @@ def normalize(M):
         mean=sum(nonNans)/len(nonNans)
         #.sum()
         col[np.isnan(col)]=mean
-        if (k in [5,6,7,8,9,10]):
+        if (i in [6,7,8]):
             col = col/np.max(col)
             #col[col==np.nan] = 0
-        newM[:,k] = col
+        newM[:,i] = col
     #print(np.shape(newM))
     return newM
