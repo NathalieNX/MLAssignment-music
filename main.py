@@ -15,12 +15,17 @@ from PCA import PCA
 #print current working directory
 print("main - Current working directory is : ", os.getcwd())
 
-# path to the Million Song Dataset subset (uncompressed) - IS LOCAL CONFIGURATION
-msd_subset_path='../MillionSongSubset'
+# path to the Million Song Dataset subset (uncompressed) 
+# REAL LOCAL CONFIGURATION
+#msd_subset_path='../MillionSongSubset'
+# TEST LOCAL CONFIGURATION
+msd_subset_path='./MillionSongSubset'
 msd_subset_data_path=os.path.join(msd_subset_path,'data')
 msd_subset_addf_path=os.path.join(msd_subset_path,'AdditionalFiles')
 assert os.path.isdir(msd_subset_path),'wrong path' # sanity check
-# path to the Million Song Dataset code - IS LOCAL CONFIGURATION
+
+# path to the Million Song Dataset code
+# REAL LOCAL CONFIGURATION
 msd_code_path='.'
 assert os.path.isdir(msd_code_path),'wrong path' # sanity check
 
