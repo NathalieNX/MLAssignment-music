@@ -38,7 +38,7 @@ print("main - dataset has instances number n=", n)
 print("main - dataset has features number m=", m)
 t_imp_prep_start = datetime.datetime.now()
 
-data=[[0 for j in range(m)] for i in range(n)]
+data=np.zeros((n,m))
 
 all_artist_names = {}
 all_artist_ids = {}
@@ -80,7 +80,7 @@ print("main - took ", t_imp_prep_end - t_imp_prep_start)
 #print("main - first few artists are : ")
 #print(all_artist_names)
 print("main - data first instances are : ")
-print(data[:5])
+print(data[:5,:])
 
 # Full dataset : data
 
