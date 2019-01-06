@@ -159,9 +159,13 @@ def normalize(M):
         col = M[:,k]
         #nonNans=[x if not(np.isnan(x)) for x in col]
         nonNans=[]
+        onlyNans=True
         for x in col:
             if not(np.isnan(x)):
                 nonNans.append(x)
+                onlyNans = False
+        if onlyNans:
+            nonNans == [0]
         nonNans=np.array(nonNans)
         mean=sum(nonNans)/len(nonNans)
         #.sum()

@@ -86,6 +86,7 @@ print("main - took ", t_imp_prep_end - t_imp_prep_start)
 #print(all_artist_names)
 print("main - data first instances are : ")
 print(data[:5,:])
+data = normalize(data)
 
 # Choosing classifier
 classifier = "SVM"
