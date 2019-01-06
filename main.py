@@ -1,7 +1,7 @@
 import numpy as np
 import csv as csv
 import os
-#from sklearn import cross_validation
+from sklearn import cross_validation
 
 import datetime 
 
@@ -108,7 +108,7 @@ y = data[:,6]
 
 ## Initialize cross validation
 
-kf = []#cross_validation.KFold(X.shape[0], n_folds=10)
+kf = cross_validation.KFold(X.shape[0], n_folds=10)
 
 totalInstances = 0 # Variable that will store the total intances that will be tested  
 totalCorrect = 0 # Variable that will store the correctly predicted intances  
