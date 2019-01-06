@@ -27,7 +27,7 @@ assert os.path.isdir(msd_code_path),'wrong path' # sanity check
 # count data instances 
 n = apply_to_all_files(msd_subset_data_path, [])
 # count features 
-m = 1
+m = 7
 
 print("main - dataset has instances number n=", n)
 print("main - dataset has features number m=", m)
@@ -35,22 +35,36 @@ t_imp_prep_start = datetime.datetime.now()
 
 data=[[0 for j in range(m)] for i in range(n)]
 all_artist_names = set()
+all_artist_ids = set()
+all_titles = set()
+all_song_ids = set()
+all_song_hotttnessss = set()
+all_danceabilities = set()
+all_durations = set()
 
 all_data = [
     data, 
-    all_artist_names]
+    all_artist_names,
+    all_artist_ids,
+    all_titles,
+    all_song_ids,
+    all_song_hotttnessss,
+    all_danceabilities,
+    all_durations]
 
 print("main - importing and preprocessing...") 
 # during import, specify path to files, and function to apply
-data = apply_to_all_files(msd_subset_data_path, all_data, func=preprocess)
+apply_to_all_files(msd_subset_data_path, all_data, func=preprocess)
 #data = apply_to_all_files(msd_subset_data_path)
 t_imp_prep_end = datetime.datetime.now()
 print("main - importing and preprocessing finished")
 print("main - took ", t_imp_prep_end - t_imp_prep_start) 
 
 # TODO delete this
-print("main - artists are : ")
-print(all_artist_names)
+#print("main - first few artists are : ")
+#print(list(all_artist_names))
+print("main - data first instances are : ")
+print(data[:5])
 
 # Full dataset : data
 

@@ -60,14 +60,16 @@ def apply_to_all_files(basedir, all_data, func=lambda x,y,z: 0, ext='.h5'):
     """
     cnt = 0
     # iterate over all files in all subdirectories
+    i=0
     for root, dirs, files in os.walk(basedir):
         files = glob.glob(os.path.join(root,'*'+ext))
         # count files
         cnt += len(files)
         # apply function to all files
-        i=0
+        
         for f in files :            
             # TODO delete
+            #print("importing - i is : ", i)
             #print("importing - f type and value : ", type(f), f)
             func(f, all_data, i)   
             i+=1
