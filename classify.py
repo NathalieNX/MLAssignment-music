@@ -1,5 +1,7 @@
 from numpy import *
+# Logistic Regression
 import scipy.optimize as op
+"""
 from logisticRegressionPredict import logisticRegressionPredict 
 from logisticRegressionComputeGrad import logisticRegressionComputeGrad
 from logisticRegressionComputeCost import logisticRegressionComputeCost
@@ -7,7 +9,7 @@ from neuralNetworkGetModel import neuralNetworkGetModel
 from neuralNetworkPredict import neuralNetworkPredict
 from kNNPredict import kNNPredict
 from DecTrees import DecisionTrees
-
+"""
 from SVM import SVM_gaussian
 
 def classify(trainSet, trainLabels, testSet, method):
@@ -18,6 +20,7 @@ def classify(trainSet, trainLabels, testSet, method):
 
     # Apply all methods 1 by 1
 
+    """
     ## Logistic regression
 
     if method == "logisticRegression" :
@@ -56,9 +59,11 @@ def classify(trainSet, trainLabels, testSet, method):
         
         predictedLabels=DecisionTrees(trainSet,trainLabels,testSet,D,T)
         return predictedLabels
-
+        
     ## SVM
     elif method == "SVM":
+    """
+    if method == "SVM":
         C=10  #If kernel is precomputed, we can simulate different values
         sigma=1
         
