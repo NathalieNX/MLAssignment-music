@@ -37,13 +37,13 @@ def get_key_value(dict, key):
     if key in dict :
         return dict[key]
     else :
-        i = len(dict)
+        i = len(dict)+1
         dict[key]=i
         return i
 
 def preprocess(filename, all_data, i):
     
-    data, all_artist_names, all_artist_ids, all_artist_locations, all_titles, all_song_ids, all_artist_mbtags, all_song_hotttnessss, all_danceabilities, all_durations, all_years, all_modes, all_tempos = all_data
+    data, all_artist_names, all_artist_ids, all_artist_locations, all_titles, all_song_ids, all_song_hotttnessss, all_danceabilities, all_durations, all_years, all_modes, all_tempos, all_artist_mbtags = all_data
     # TODO delete this
     #print("preprocess - filename type and value : ", type(filename), filename)
     #print("preprocess - i is : ", i)
@@ -68,80 +68,82 @@ def preprocess(filename, all_data, i):
     
     artist_name = GETTERS.get_artist_name(h5).decode("utf-8")
     value = get_key_value(all_artist_names, artist_name)
-    data[i][j] = value
+    data[i,j] = value
     j+=1
     
     artist_id = GETTERS.get_artist_id(h5).decode("utf-8")
     value = get_key_value(all_artist_ids, artist_id)
-    data[i][j] = value
+    data[i,j] = value
     j+=1
     
     artist_location = GETTERS.get_artist_location(h5).decode("utf-8")
     value = get_key_value(all_artist_locations, artist_location)
-    data[i][j] = value
+    data[i,j] = value
     j+=1
     
     title = GETTERS.get_title(h5).decode("utf-8")
     value = get_key_value(all_titles, title)
-    data[i][j] = value
+    data[i,j] = value
     j+=1
     
     song_id = GETTERS.get_song_id(h5).decode("utf-8")
     value = get_key_value(all_song_ids, song_id)
-    data[i][j] = value
-    j+=1
-    
-    artist_mbtags = GETTERS.get_artist_mbtags(h5)
-    data[i][j] = []
-    for artist_mbtag in artist_mbtags :
-        value = get_key_value(all_artist_mbtags, artist_mbtag.decode("utf-8"))
-        data[i][j].append(value)
+    data[i,j] = value
     j+=1
 
     song_hotttnesss = GETTERS.get_song_hotttnesss(h5)
     all_song_hotttnessss.add(song_hotttnesss)
-    data[i][j] = song_hotttnesss
+    data[i,j] = song_hotttnesss
     j+=1
     
     danceability = GETTERS.get_danceability(h5)
     all_danceabilities.add(danceability)
-    data[i][j] = danceability
+    data[i,j] = danceability
     j+=1
     
     duration = GETTERS.get_duration(h5)
     all_durations.add(duration)
-    data[i][j] = duration
+    data[i,j] = duration
     j+=1
 
     year = GETTERS.get_year(h5)
     all_years.add(year)
-    data[i][j] = year
+    data[i,j] = year
     j+=1
     
     mode = GETTERS.get_mode(h5)
     all_modes.add(mode)
-    data[i][j] = mode
+    data[i,j] = mode
     j+=1
     
     tempo = GETTERS.get_tempo(h5)
     all_tempos.add(tempo)
-    data[i][j] = tempo
+    data[i,j] = tempo
     j+=1
+    
+    artist_mbtags = GETTERS.get_artist_mbtags(h5)
+    k=0
+    for artist_mbtag in artist_mbtags :
+        if k <= 4 :
+            value = get_key_value(all_artist_mbtags, artist_mbtag.decode("utf-8"))
+            data[i,j] = value
+            j+=1
+            k+=1
     
     """
      = GETTERS.get_(h5)
     all_s.add()
-    data[i][j] = 
+    data[i,j] = 
     j+=1
     
      = GETTERS.get_(h5)
     all_s.add()
-    data[i][j] = 
+    data[i,j] = 
     j+=1
     
      = GETTERS.get_(h5)
     all_s.add()
-    data[i][j] = 
+    data[i,j] = 
     j+=1
     """
     
