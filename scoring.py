@@ -5,8 +5,14 @@ import numpy as np
 def binaryscore(Y,Y_pred):      #Input lists of actual and predicted characteristics
     return sum(np.equal(Y,Y_pred))/len(Y)
 
-def distscore(y,y_pred):        #Input a numerical prediction (release year, danceability)
-    return (y-y_pred)**2
+def distscore(Y,Y_pred):        #Input a numerical prediction (release year, danceability)
+    y_min = min(Y)
+    y_max = max(Y)
+    total = 0
+    for i in range(len(Y)):
+        total += (Y[i] - Y_pred[i])**2 
+    
+    return total/((y_max-y_min)*len(Y))
 
 #Tag scoring
 

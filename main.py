@@ -123,7 +123,7 @@ for trainIndex, testIndex in kf:
 
     predictedLabels = classify(trainSet, trainLabels, testSet, classifier)
 
-    accuracy = binaryscore(testLabels, predictedLabels)
+    accuracy = distscore(testLabels, predictedLabels)
     
     print("main - accuracy is : ", accuracy)
     
@@ -138,7 +138,6 @@ for trainIndex, testIndex in kf:
     totalInstances += testLabels.size
     """
     
-print ('Total Accuracy: ' + str(accuracy))
 
 
 ## Return results as CSV
