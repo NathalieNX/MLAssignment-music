@@ -37,13 +37,13 @@ def get_key_value(dict, key):
     if key in dict :
         return dict[key]
     else :
-        i = len(dict)
+        i = len(dict)+1
         dict[key]=i
         return i
 
 def preprocess(filename, all_data, i):
     
-    data, all_artist_names, all_artist_ids, all_artist_locations, all_titles, all_song_ids, all_artist_mbtags, all_song_hotttnessss, all_danceabilities, all_durations, all_years, all_modes, all_tempos = all_data
+    data, all_artist_names, all_artist_ids, all_artist_locations, all_titles, all_song_ids, all_song_hotttnessss, all_danceabilities, all_durations, all_years, all_modes, all_tempos, all_artist_mbtags = all_data
     # TODO delete this
     #print("preprocess - filename type and value : ", type(filename), filename)
     #print("preprocess - i is : ", i)
@@ -91,15 +91,6 @@ def preprocess(filename, all_data, i):
     data[i,j] = value
     j+=1
     
-    '''
-    artist_mbtags = GETTERS.get_artist_mbtags(h5)
-    data[i,j] = []
-    for artist_mbtag in artist_mbtags :
-        value = get_key_value(all_artist_mbtags, artist_mbtag.decode("utf-8"))
-        data[i,j].append(value)
-    j+=1
-    '''
-    
     song_hotttnesss = GETTERS.get_song_hotttnesss(h5)
     all_song_hotttnessss.add(song_hotttnesss)
     data[i,j] = song_hotttnesss
@@ -130,20 +121,29 @@ def preprocess(filename, all_data, i):
     data[i,j] = tempo
     j+=1
     
+    artist_mbtags = GETTERS.get_artist_mbtags(h5)
+    k=0
+    for artist_mbtag in artist_mbtags :
+        if k <= 4 :
+            value = get_key_value(all_artist_mbtags, artist_mbtag.decode("utf-8"))
+            data[i,j] = value
+            j+=1
+            k+=1
+    
     """
      = GETTERS.get_(h5)
     all_s.add()
-    data[i][j] = 
+    data[i,j] = 
     j+=1
     
      = GETTERS.get_(h5)
     all_s.add()
-    data[i][j] = 
+    data[i,j] = 
     j+=1
     
      = GETTERS.get_(h5)
     all_s.add()
-    data[i][j] = 
+    data[i,j] = 
     j+=1
     """
     data = normalize(data)
@@ -155,10 +155,14 @@ def normalize(M):
     example=M[0]
     for k, elem in enumerate(example):
         col = M[:,k]
-        nonNans=[x if not(np.isnan(x)) for x in col]
+        #nonNans=[x if not(np.isnan(x)) for x in col]
+        nonNans=[]
+        for x in col:
+            if not(np.isnan(x)):
+                nonNans.append(x)
+        nonNans=np.array(nonNans)
+        mean=sum(nonNans)/len(nonNans)
         #.sum()
-        mean=nonNans/nonNans.shape()
-        print(mean)
         col[np.isnan(col)]=mean
         if type(elem) == float:
             col = (col-np.mean(col))
