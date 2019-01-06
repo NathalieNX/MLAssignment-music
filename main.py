@@ -1,14 +1,15 @@
 import numpy as np
 import csv as csv
 import os
+from sklearn import cross_validation
 
 import datetime 
 
 from importing import apply_to_all_files
 from preprocess import preprocess
 from classify import classify
-
 from PCA import PCA 
+from scoring import binaryscore
 
 ## Import data and Preprocess
 
@@ -89,24 +90,57 @@ print(data[:5,:])
 classifier = "SVM"
 
 if classifier == "logisticRegression" :
-    Xall = PCA(data, 5)
+    data = PCA(data, 5)
 elif classifier == "kNN" :
-    Xall = PCA(data, 20)
+    data = PCA(data, 20)
 # elif classifier == "adaBoost" : no PCA needed
 elif classifier == "SVM" :
-    Xall = PCA(data, 12)
+    data = PCA(data, 12)
 # elif classifier == "neuralNetwork" : no PCA needed
+
+## Choose variable to be studied
+
+# variable is year : index is 9
+X = np.zeros((n, m-1))
+X[:,:9] = data[:,:9]
+X[:,9:] = data[:,10:]
+y = data[:,9]
+
 
 ## Initialize cross validation
 
-# X : training data (without labels)
-# y : training data labels
-# Xtest : test data
+kf = cross_validation.KFold(X.shape[0], n_folds=10)
 
+totalInstances = 0 # Variable that will store the total intances that will be tested  
+totalCorrect = 0 # Variable that will store the correctly predicted intances  
 
-## Compute results
+for trainIndex, testIndex in kf:
+    trainSet = X[trainIndex]
+    testSet = X[testIndex]
+    trainLabels = y[trainIndex]
+    testLabels = y[testIndex]
+    
+    #Predict
 
-predictedLabels = classify(X, y, Xtest, classifier)
+    predictedLabels = classify(trainSet, trainLabels, testSet, classifier)
+
+    accuracy = binaryscore(testLabels, predictedLabels)
+    
+    print("main - accuracy is : ", accuracy)
+    
+    """
+    correct = 0
+    for i in range(testSet.shape[0]):
+        if predictedLabels[i] == testLabels[i]:
+            correct += 1
+    
+    print ('Accuracy: ' + str(float(correct)/(testLabels.size)))
+    totalCorrect += correct
+    totalInstances += testLabels.size
+    """
+    
+print ('Total Accuracy: ' + str(accuracy))
+
 
 ## Return results as CSV
 

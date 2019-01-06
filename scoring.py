@@ -3,7 +3,7 @@
 import numpy as np
 
 def binaryscore(Y,Y_pred):      #Input lists of actual and predicted characteristics
-    return sum(np.equal(Y,Y_pred))
+    return sum(np.equal(Y,Y_pred))/len(Y)
 
 def distscore(y,y_pred):        #Input a numerical prediction (release year, danceability)
     return (y-y_pred)**2
