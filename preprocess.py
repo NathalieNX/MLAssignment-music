@@ -43,7 +43,7 @@ def get_key_value(dict, key):
 
 def preprocess(filename, all_data, i):
     
-    data, all_artist_names, all_artist_ids, all_artist_locations, all_titles, all_song_ids, all_song_hotttnessss, all_danceabilities, all_durations, all_years, all_modes, all_tempos, all_artist_mbtags = all_data
+    data, all_artist_names, all_artist_ids, all_artist_locations, all_titles, all_song_ids, all_years, all_song_hotttnessss, all_danceabilities, all_durations, all_modes, all_tempos, all_artist_mbtags = all_data
     # TODO delete this
     #print("preprocess - filename type and value : ", type(filename), filename)
     #print("preprocess - i is : ", i)
@@ -90,6 +90,11 @@ def preprocess(filename, all_data, i):
     value = get_key_value(all_song_ids, song_id)
     data[i,j] = value
     j+=1
+
+    year = GETTERS.get_year(h5)
+    all_years.add(year)
+    data[i,j] = year
+    j+=1
     
     song_hotttnesss = GETTERS.get_song_hotttnesss(h5)
     all_song_hotttnessss.add(song_hotttnesss)
@@ -106,11 +111,6 @@ def preprocess(filename, all_data, i):
     data[i,j] = duration
     j+=1
 
-    year = GETTERS.get_year(h5)
-    all_years.add(year)
-    data[i,j] = year
-    j+=1
-    
     mode = GETTERS.get_mode(h5)
     all_modes.add(mode)
     data[i,j] = mode

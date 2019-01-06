@@ -46,10 +46,10 @@ all_artist_ids = {}
 all_artist_locations = {}
 all_titles = {}
 all_song_ids = {}
+all_years = set()
 all_song_hotttnessss = set()
 all_danceabilities = set()
 all_durations = set()
-all_years = set()
 all_modes = set()
 all_tempos = set()
 all_artist_mbtags = {}
@@ -61,10 +61,10 @@ all_data = [
     all_artist_locations,
     all_titles,
     all_song_ids,
+    all_years,
     all_song_hotttnessss,
     all_danceabilities,
     all_durations,
-    all_years,
     all_modes,
     all_tempos,
     all_artist_mbtags
