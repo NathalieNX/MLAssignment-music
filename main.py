@@ -1,7 +1,7 @@
 import numpy as np
 import csv as csv
 import os
-from sklearn import cross_validation
+#from sklearn import cross_validation
 
 import datetime 
 
@@ -47,8 +47,6 @@ all_artist_locations = {}
 all_titles = {}
 all_song_ids = {}
 all_years = set()
-all_song_hotttnessss = set()
-all_danceabilities = set()
 all_durations = set()
 all_modes = set()
 all_tempos = set()
@@ -62,8 +60,6 @@ all_data = [
     all_titles,
     all_song_ids,
     all_years,
-    all_song_hotttnessss,
-    all_danceabilities,
     all_durations,
     all_modes,
     all_tempos,
@@ -102,17 +98,17 @@ elif classifier == "SVM" :
 
 ## Choose variable to be studied
 
-# variable is year : index is 9
+# variable is year : index is 5
 (newN, newM)=np.shape(data)
 X = np.zeros((newN, newM-1))
-X[:,:9] = data[:,:9]
-X[:,9:] = data[:,10:]
-y = data[:,9]
+X[:,:5] = data[:,:5]
+X[:,5:] = data[:,6:]
+y = data[:,6]
 
 
 ## Initialize cross validation
 
-kf = cross_validation.KFold(X.shape[0], n_folds=10)
+kf = []#cross_validation.KFold(X.shape[0], n_folds=10)
 
 totalInstances = 0 # Variable that will store the total intances that will be tested  
 totalCorrect = 0 # Variable that will store the correctly predicted intances  
