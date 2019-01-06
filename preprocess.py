@@ -146,13 +146,15 @@ def preprocess(filename, all_data, i):
     data[i,j] = 
     j+=1
     """
-    data = normalize(data)
     
     h5.close()
 
+
+#Colonnes de flottants : 6, 7 ,8, 9,10
 def normalize(M):
     newM=np.zeros(np.shape(M))
     example=M[0]
+    #print(np.shape(M))
     for k, elem in enumerate(example):
         col = M[:,k]
         #nonNans=[x if not(np.isnan(x)) for x in col]
@@ -164,9 +166,9 @@ def normalize(M):
         mean=sum(nonNans)/len(nonNans)
         #.sum()
         col[np.isnan(col)]=mean
-        if type(elem) == float:
-            col = (col-np.mean(col))
-            col= col/np.norm(col)
+        if (k in [5,6,7,8,9,10]):
+            col = col/np.max(col)
             #col[col==np.nan] = 0
         newM[:,k] = col
+    #print(np.shape(newM))
     return newM

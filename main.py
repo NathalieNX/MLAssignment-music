@@ -6,7 +6,7 @@ from sklearn import cross_validation
 import datetime 
 
 from importing import apply_to_all_files
-from preprocess import preprocess
+from preprocess import preprocess, normalize
 from classify import classify
 from PCA import PCA 
 from scoring import binaryscore
@@ -33,7 +33,7 @@ assert os.path.isdir(msd_code_path),'wrong path' # sanity check
 # count data instances 
 n = apply_to_all_files(msd_subset_data_path, [])
 # count features 
-m = 12+4
+m = 12+4 #Should be 16
 
 print("main - dataset has instances number n=", n)
 print("main - dataset has features number m=", m)
@@ -78,13 +78,14 @@ t_imp_prep_end = datetime.datetime.now()
 print("main - importing and preprocessing finished")
 print("main - took ", t_imp_prep_end - t_imp_prep_start) 
 
+# Full dataset : data
+#data = normalize(data)
+
 # TODO delete this
 #print("main - first few artists are : ")
 #print(all_artist_names)
 print("main - data first instances are : ")
 print(data[:5,:])
-
-# Full dataset : data
 
 # Choosing classifier
 classifier = "SVM"
@@ -101,7 +102,8 @@ elif classifier == "SVM" :
 ## Choose variable to be studied
 
 # variable is year : index is 9
-X = np.zeros((n, m-1))
+(newN, newM)=np.shape(data)
+X = np.zeros((newN, newM-1))
 X[:,:9] = data[:,:9]
 X[:,9:] = data[:,10:]
 y = data[:,9]
