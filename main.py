@@ -89,7 +89,7 @@ print(data[:5,:])
 data = normalize(data)
 
 # Choosing classifier
-classifier = "SVM"
+classifier = "neuralNetwork"
 
 if classifier == "logisticRegression" :
     data = PCA(data, 5)
@@ -117,6 +117,9 @@ kf = cross_validation.KFold(X.shape[0], n_folds=10)
 totalInstances = 0 # Variable that will store the total intances that will be tested  
 totalCorrect = 0 # Variable that will store the correctly predicted intances  
 
+if classifier == "neuralNetwork":
+    model, theta = neuralNetworkGetModel(trainSet, trainLabels)
+
 for trainIndex, testIndex in kf:
     trainSet = X[trainIndex]
     testSet = X[testIndex]
@@ -124,8 +127,14 @@ for trainIndex, testIndex in kf:
     testLabels = y[testIndex]
     
     #Predict
-
     predictedLabels = classify(trainSet, trainLabels, testSet, classifier)
+    
+    if classifier == "neuralNetwork":    
+        predictedLabels = neuralNetworkPredict(testSet, model, theta)
+    else:
+        predictedLabels = classify(trainSet, trainLabels, testSet, classifier)
+
+
 
     accuracy = binaryscore(testLabels, predictedLabels)
     

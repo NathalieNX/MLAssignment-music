@@ -1,6 +1,8 @@
 from numpy import *
 # Logistic Regression
 import scipy.optimize as op
+from neuralNetworkGetModel import neuralNetworkGetModel
+from neuralNetworkPredict import neuralNetworkPredict
 """
 from logisticRegressionPredict import logisticRegressionPredict 
 from logisticRegressionComputeGrad import logisticRegressionComputeGrad
@@ -71,8 +73,8 @@ def classify(trainSet, trainLabels, testSet, method):
         return predictedLabels
     
     ## Neural Network
-#    elif method == "neuralNetwork":
-#        model, theta = neuralNetworkGetModel(trainSet, trainLabels)
-#        predictedLabels = neuralNetworkPredict(testSet, model, theta)
-#        return predictedLabels
+    elif method == "neuralNetwork":
+        model, theta = neuralNetworkGetModel(trainSet, trainLabels)
+        predictedLabels = neuralNetworkPredict(testSet, model, theta)
+        return predictedLabels
 
