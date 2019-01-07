@@ -33,7 +33,7 @@ assert os.path.isdir(msd_code_path),'wrong path' # sanity check
 # count data instances 
 n = apply_to_all_files(msd_subset_data_path, [])
 # count features 
-m = 12+4 #Should be 16
+m = 10+4 #Should be 16
 
 print("main - dataset has instances number n=", n)
 print("main - dataset has features number m=", m)
@@ -48,10 +48,10 @@ all_titles = {}
 all_song_ids = {}
 all_years = set()
 all_durations = set()
-all_keys = set()
+#all_keys = set()
 all_modes = set()
 all_tempos = set()
-all_time_signatures = set()
+#all_time_signatures = set()
 all_artist_mbtags = {}
 
 all_data = [
@@ -63,10 +63,10 @@ all_data = [
     all_song_ids,
     all_years,
     all_durations,
-    all_keys,
+    #all_keys,
     all_modes,
     all_tempos,
-    all_time_signatures,
+    #all_time_signatures,
     all_artist_mbtags
     ]
 

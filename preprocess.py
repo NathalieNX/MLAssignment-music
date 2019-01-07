@@ -43,7 +43,7 @@ def get_key_value(dict, key):
 
 def preprocess(filename, all_data, i):
     
-    data, all_artist_names, all_artist_ids, all_artist_locations, all_titles, all_song_ids, all_years, all_durations, all_keys, all_modes, all_tempos, all_time_signatures, all_artist_mbtags = all_data
+    data, all_artist_names, all_artist_ids, all_artist_locations, all_titles, all_song_ids, all_years, all_durations, all_modes, all_tempos, all_artist_mbtags = all_data
     # TODO delete this
     #print("preprocess - filename type and value : ", type(filename), filename)
     #print("preprocess - i is : ", i)
@@ -101,10 +101,12 @@ def preprocess(filename, all_data, i):
     data[i,j] = duration
     j+=1
     
+    """
     key = GETTERS.get_key(h5)
     all_keys.add(key)
     data[i,j] = key
     j+=1
+    """
 
     mode = GETTERS.get_mode(h5)
     all_modes.add(mode)
@@ -116,10 +118,12 @@ def preprocess(filename, all_data, i):
     data[i,j] = tempo
     j+=1
     
+    """
     time_signature = GETTERS.get_time_signature(h5)
     all_time_signatures.add()
     data[i,j] = time_signature
     j+=1
+    """
     
     artist_mbtags = GETTERS.get_artist_mbtags(h5)
     k=0
@@ -166,7 +170,7 @@ def normalize(M):
         mean=sum(nonNans)/len(nonNans)
         #.sum()
         col[np.isnan(col)]=mean
-        if (i in [6,7,8,9,10]):
+        if (i in [6,7,8]):
             col = col/np.max(col)
             #col[col==np.nan] = 0
         newM[:,i] = col
