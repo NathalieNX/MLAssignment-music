@@ -43,27 +43,11 @@ def get_key_value(dict, key):
 
 def preprocess(filename, all_data, i):
     
-    data, all_artist_names, all_artist_ids, all_artist_locations, all_titles, all_song_ids, all_years, all_durations, all_keys, all_modes, all_tempos, all_time_signatures, all_artist_mbtags = all_data
-    # TODO delete this
-    #print("preprocess - filename type and value : ", type(filename), filename)
-    #print("preprocess - i is : ", i)
+    data, all_artist_names, all_artist_ids, all_artist_locations, all_titles, all_song_ids, all_years, all_durations, all_modes, all_tempos, all_artist_mbtags = all_data
     
     # data = [[]]
     j=0
     
-    '''
-    def func_to_get_artist_name(filename):
-        """
-        This function does 3 simple things:
-        - open the song file
-        - get artist ID and put it
-        - close the file
-        """
-        h5 = GETTERS.open_h5_file_read(filename)
-        artist_name = GETTERS.get_artist_name(h5)
-        all_artist_names.add( artist_name )
-        h5.close()
-    '''
     h5 = GETTERS.open_h5_file_read(filename)
     
     artist_name = GETTERS.get_artist_name(h5).decode("utf-8")
@@ -100,11 +84,6 @@ def preprocess(filename, all_data, i):
     all_durations.add(duration)
     data[i,j] = duration
     j+=1
-    
-    key = GETTERS.get_key(h5)
-    all_keys.add(key)
-    data[i,j] = key
-    j+=1
 
     mode = GETTERS.get_mode(h5)
     all_modes.add(mode)
@@ -116,11 +95,6 @@ def preprocess(filename, all_data, i):
     data[i,j] = tempo
     j+=1
     
-    time_signature = GETTERS.get_time_signature(h5)
-    all_time_signatures.add()
-    data[i,j] = time_signature
-    j+=1
-    
     artist_mbtags = GETTERS.get_artist_mbtags(h5)
     k=0
     for artist_mbtag in artist_mbtags :
@@ -129,46 +103,70 @@ def preprocess(filename, all_data, i):
             data[i,j] = value
             j+=1
             k+=1
-    
-    """
-    
-     = GETTERS.get_(h5)
-    all_s.add()
-    data[i,j] = 
-    j+=1
-    
-     = GETTERS.get_(h5)
-    all_s.add()
-    data[i,j] = 
-    j+=1
-    """
-    
+
     h5.close()
 
-
+## FIRST DATABASE - normalize
+"""
+#Set skip to false to keep data with no tagged year
 #Colonnes de flottants : 6, 7 ,8, 9,10
-def normalize(M):
-    newM=np.zeros(np.shape(M))
+def normalize(M, skip=True):
+    (n,m)=np.shape(M)
+    newM=np.zeros((0,m))
     example=M[0]
     #print(np.shape(M))
     for i, elem in enumerate(example):
         col = M[:,i]
-        #nonNans=[x if not(np.isnan(x)) for x in col]
         nonNans=[]
         onlyNans=True
         for x in col:
             if not(np.isnan(x)):
-                nonNans.append(x)
-                onlyNans = False
+                if i==5: #for years, we need to skip zeroes
+                    if x!=0:
+                        nonNans.append(x)
+                        onlyNans = False
+                else:
+                    nonNans.append(x)
+                    onlyNans = False
         if onlyNans:
             nonNans == [0]
         nonNans=np.array(nonNans)
         mean=sum(nonNans)/len(nonNans)
+        minimum=np.min(nonNans)
+        if i==5:
+            col[col==0]=minimum-1
+            col=np.array([int(x-minimum)+1 for x in col])
+            for j, year in enumerate(col):
+                if year!=0:
+                    newM = np.append(newM,[M[j]],0)
         #.sum()
         col[np.isnan(col)]=mean
-        if (i in [6,7,8,9,10]):
-            col = col/np.max(col)
+        if (i in [6,7,8]):
+            col = col-mean
             #col[col==np.nan] = 0
-        newM[:,i] = col
-    #print(np.shape(newM))
+    yearsCol = newM[:,5]
+    minimum  = np.min(yearsCol)
+    newM[:,5]=(newM[:,5]-minimum)/100
     return newM
+"""
+
+## SECOND DATABASE - normalize
+
+def normalize(M, skip=True):
+    (n, m)=np.shape(M)
+    # Normalize all columns, setting missing value to 0
+    for i in range((np.shape(M))[1]):
+        column = M[:,i]
+        nonEmpty = column[column != -1]
+        mean = np.mean(nonEmpty)
+        std = np.std(nonEmpty)
+        if (std==0):
+            std=1
+        column[column == -1] = mean
+        M[:,i] = (column - mean)/std
+    return M
+
+def normalizeY(Y):
+    y=np.array(Y)
+    y=(y-1900)/200
+    return(y)

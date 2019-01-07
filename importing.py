@@ -68,14 +68,7 @@ def apply_to_all_files(basedir, all_data, func=lambda x,y,z: 0, ext='.h5'):
         # apply function to all files
         
         for f in files :            
-            # TODO delete
-            #print("importing - i is : ", i)
-            #print("importing - f type and value : ", type(f), f)
             func(f, all_data, i)   
             i+=1
     return cnt
- 
-"""
-# we can now easily count the number of files in the dataset
-print('number of song files:',apply_to_all_files(msd_subset_data_path))
-"""
+

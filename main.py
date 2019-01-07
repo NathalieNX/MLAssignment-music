@@ -6,15 +6,21 @@ from sklearn import cross_validation
 import datetime 
 
 from importing import apply_to_all_files
-from preprocess import preprocess, normalize
+from preprocess import preprocess, normalize, normalizeY
 from classify import classify
 from PCA import PCA 
-from scoring import binaryscore
+from scoring import binaryscore, distscore, distscore_sqrt
+from neuralNetworkGetModel import neuralNetworkGetModel, train
+from neuralNetworkPredict import neuralNetworkPredict
 
 ## Import data and Preprocess
 
 #print current working directory
 print("main - Current working directory is : ", os.getcwd())
+
+
+## FIRST DATABASE - IMPORTING AND PREPROCESSING
+"""
 
 # path to the Million Song Dataset subset (uncompressed) 
 # REAL LOCAL CONFIGURATION
@@ -24,6 +30,7 @@ msd_subset_path='./MillionSongSubset'
 msd_subset_data_path=os.path.join(msd_subset_path,'data')
 msd_subset_addf_path=os.path.join(msd_subset_path,'AdditionalFiles')
 assert os.path.isdir(msd_subset_path),'wrong path' # sanity check
+
 
 # path to the Million Song Dataset code
 # REAL LOCAL CONFIGURATION
@@ -77,48 +84,45 @@ apply_to_all_files(msd_subset_data_path, all_data, func=preprocess)
 t_imp_prep_end = datetime.datetime.now()
 print("main - importing and preprocessing finished")
 print("main - took ", t_imp_prep_end - t_imp_prep_start) 
+"""
 
-# Full dataset : data
-#data = normalize(data)
+## SECOND DATABASE - IMPORTING AND PREPROCESSING
+print('##########################')
+print('Getting data')
+t_imp_prep_start = datetime.datetime.now()
+basedata = np.loadtxt('YearPredictionMSD.txt', delimiter=',')
+print("main - data shape is : ", np.shape(basedata))
+t_imp_prep_end = datetime.datetime.now()
+print("main - importing and preprocessing finished")
+print("main - took ", t_imp_prep_end - t_imp_prep_start) 
 
-# TODO delete this
-#print("main - first few artists are : ")
-#print(all_artist_names)
 print("main - data first instances are : ")
-print(data[:5,:])
-data = normalize(data)
+print(basedata[:5,:])
 
-# Choosing classifier
-classifier = "neuralNetwork"
-
-if classifier == "logisticRegression" :
-    data = PCA(data, 5)
-elif classifier == "kNN" :
-    data = PCA(data, 20)
-# elif classifier == "adaBoost" : no PCA needed
-elif classifier == "SVM" :
-    data = PCA(data, 12)
-# elif classifier == "neuralNetwork" : no PCA needed
-
-## Choose variable to be studied
-
-# variable is year : index is 5
+## FIRST DATABASE - Choose variable to be studied
+"""
+# variable is year : index is 5s
 (newN, newM)=np.shape(data)
 X = np.zeros((newN, newM-1))
 X[:,:5] = data[:,:5]
 X[:,5:] = data[:,6:]
 y = data[:,6]
-
+"""
+## SECOND DATABASE - Choose variable to be studied
+(newN, newM)=np.shape(basedata)
+X = np.zeros((newN, newM-1))
+X = basedata[:,1:]
+Y = basedata[:,0]
+X = normalize(X)
+y = normalizeY(Y)
 
 ## Initialize cross validation
-
-kf = cross_validation.KFold(X.shape[0], n_folds=10)
+kf = cross_validation.KFold(X.shape[0], n_folds=3)
 
 totalInstances = 0 # Variable that will store the total intances that will be tested  
 totalCorrect = 0 # Variable that will store the correctly predicted intances  
-
-if classifier == "neuralNetwork":
-    model, theta = neuralNetworkGetModel(trainSet, trainLabels)
+classifier = "neuralNetwork"
+model = None
 
 for trainIndex, testIndex in kf:
     trainSet = X[trainIndex]
@@ -127,40 +131,16 @@ for trainIndex, testIndex in kf:
     testLabels = y[testIndex]
     
     #Predict
-    predictedLabels = classify(trainSet, trainLabels, testSet, classifier)
+    predictedLabels, model = classify(trainSet, trainLabels, testSet, classifier, model)
+    predictedLabels= np.array(predictedLabels)
+    predictedLabels = predictedLabels*200+1900
+    testLabels = testLabels*200+1900
+    print("predicted : \n", (predictedLabels[0:100]))
+    print ("actual : \n", (testLabels[0:100]))
+    #print("main - accuracy is : ", accuracy)
     
-    if classifier == "neuralNetwork":    
-        predictedLabels = neuralNetworkPredict(testSet, model, theta)
-    else:
-        predictedLabels = classify(trainSet, trainLabels, testSet, classifier)
-
-
-
     accuracy = distscore(testLabels, predictedLabels)
-    
-    print("main - accuracy is : ", accuracy)
-    
-    """
-    correct = 0
-    for i in range(testSet.shape[0]):
-        if predictedLabels[i] == testLabels[i]:
-            correct += 1
-    
-    print ('Accuracy: ' + str(float(correct)/(testLabels.size)))
-    totalCorrect += correct
-    totalInstances += testLabels.size
-    """
-    
-
-
-## Return results as CSV
-
-with open('results.csv', 'w', newline='') as csvfile:
-    #fieldnames = ['PassengerId', 'Survived']
-    #writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-
-    #writer.writeheader()
-    #for i in range(Xtest.shape[0]):
-    #    writer.writerow({'PassengerId' : ids[i], 'Survived' : predictedLabels[i]})
-    print("finish main")
+    accuracy_sqrt = distscore_sqrt(testLabels, predictedLabels)
+    print ('Average distance to real value: ' + str(accuracy))
+    print ('Standard Deviation: ' + str(accuracy))
 
