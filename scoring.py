@@ -9,10 +9,12 @@ def distscore(Y,Y_pred):        #Input a numerical prediction (release year, dan
     y_min = min(Y)
     y_max = max(Y)
     total = 0
+    norm_coef = 0
     for i in range(len(Y)):
         total += (Y[i] - Y_pred[i])**2 
+        norm_coef += max(Y[i] - y_min, y_max - Y[i])**2
     
-    return total/((y_max-y_min)*len(Y))
+    return total/norm_coef
 
 #Tag scoring
 
