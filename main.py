@@ -48,8 +48,10 @@ all_titles = {}
 all_song_ids = {}
 all_years = set()
 all_durations = set()
+all_keys = set()
 all_modes = set()
 all_tempos = set()
+all_time_signatures = set()
 all_artist_mbtags = {}
 
 all_data = [
@@ -61,8 +63,10 @@ all_data = [
     all_song_ids,
     all_years,
     all_durations,
+    all_keys,
     all_modes,
     all_tempos,
+    all_time_signatures,
     all_artist_mbtags
     ]
 
